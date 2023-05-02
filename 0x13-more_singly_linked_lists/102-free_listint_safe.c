@@ -10,23 +10,31 @@
 size_t free_listint_safe(listint_t **h)
 {
 	size_t size = 0;
-	listint_t *temp;
+	listint_t *current, *next;
 
-	while (*h != NULL)
+	if (h == NULL || *h == NULL)
+		return (0);
+
+	current = *h;
+	while (current != NULL)
 	{
-		if (*h <= (*h)->next)
-		{
-			temp = *h;
-			*h = NULL;
-			free(temp);
-			size++;
+		if (current->visited == 1)
 			break;
-		}
-
-		temp = (*h)->next;
-		free(*h);
-		*h = temp;
+		current->visited = 1;
+		next = current->next;
+		free(current);
 		size++;
+		current = next;
 	}
+
+	current = *h;
+	while (current != NULL)
+	{
+		next = current->next;
+		current->visited = 0;
+		current = next;
+	}
+
+	*h = NULL;
 	return (size);
 }
