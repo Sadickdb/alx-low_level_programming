@@ -4,38 +4,30 @@
  * free_listint_safe - frees a listint_t list.
  * @h: pointer to the head of the list.
  *
- * Return: the size of the list that was freed.
+ * Return: the size of the list that freed
  */
 
 size_t free_listint_safe(listint_t **h)
 {
 	size_t size = 0;
-	listint_t *current;
-	listint_t *next;
+	listint_t *temp;
 
-	if (h == NULL || *h == NULL)
-		return (0);
-
-	current = *h;
-	while (current != NULL)
+	while (*h != NULL)
 	{
-		if (current->visited == 1)
+		if (*h <= (*h)->next)
+		{
+			temp = *h;
+			*h = NULL;
+			free(temp);
+			size++;
 			break;
-		current->visited = 1;
-		next = current->next;
-		free(current);
+		}
+
+		temp = (*h)->next;
+		free(*h);
 		size++;
-		current = next;
 	}
 
-	current = *h;
-	while (current != NULL)
-	{
-		next = current->next;
-		current->visited = 0;
-		current = next;
-	}
-
-	*h = NULL;
 	return (size);
 }
+
